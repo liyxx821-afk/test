@@ -1,0 +1,417 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>山水映迹——唐诗之路的行为与行迹解构</title>
+  <style>
+    :root {
+      --bg: #000000;
+      --panel: #071014;
+      --panel-2: #0b171c;
+      --line: #1f3a43;
+      --line-soft: #142930;
+      --text: #edf8fa;
+      --muted: #9db7bd;
+      --quiet: #6f8a91;
+      --teal: #56EAF5;
+      --teal-2: #43B8C4;
+      --sage: #8EDDE5;
+      --gold: #B8F3F7;
+      --ink: #03090b;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans SC", Arial, sans-serif;
+      letter-spacing: 0;
+    }
+
+    body {
+      display: grid;
+      place-items: center;
+      padding: 28px;
+      background:
+        radial-gradient(circle at 22% 0%, rgba(86, 234, 245, .07), transparent 30%),
+        linear-gradient(180deg, #000000 0%, #031015 100%);
+    }
+
+    .board {
+      width: min(1800px, calc(100vw - 56px));
+      min-width: 1080px;
+      background: rgba(2, 7, 9, .98);
+      border: 1px solid var(--line);
+      padding: 18px 20px 20px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 0 2px 14px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 24px;
+      line-height: 1.2;
+      font-weight: 800;
+      letter-spacing: 0;
+    }
+
+    .subtitle {
+      flex: 0 0 auto;
+      color: var(--quiet);
+      font-size: 12px;
+      line-height: 1.5;
+      text-align: right;
+    }
+
+    .panels {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+      padding-top: 16px;
+    }
+
+    .panel {
+      position: relative;
+      aspect-ratio: 1 / 1;
+      min-width: 0;
+      overflow: hidden;
+      background:
+        linear-gradient(180deg, rgba(7, 16, 20, .98), rgba(3, 8, 10, .98));
+      border: 1px solid var(--line);
+      padding: 18px;
+    }
+
+    .panel::before {
+      content: "";
+      position: absolute;
+      inset: 18px;
+      border-top: 1px solid rgba(86, 234, 245, .16);
+      pointer-events: none;
+    }
+
+    .panel-head {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: flex-start;
+      margin-bottom: 14px;
+    }
+
+    .panel h2 {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.22;
+      font-weight: 800;
+    }
+
+    .mark {
+      color: var(--teal);
+      font-size: 11px;
+      line-height: 1.3;
+      white-space: nowrap;
+      padding-top: 2px;
+    }
+
+    .caption {
+      position: relative;
+      z-index: 2;
+      margin: 0;
+      color: var(--quiet);
+      font-size: 11px;
+      line-height: 1.55;
+    }
+
+    .chart {
+      position: absolute;
+      left: 18px;
+      right: 18px;
+      top: 92px;
+      bottom: 18px;
+      z-index: 1;
+    }
+
+    svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .word {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      color: var(--teal);
+      font-weight: 800;
+      white-space: nowrap;
+      line-height: 1;
+    }
+
+    .word.alt {
+      color: var(--sage);
+    }
+
+    .word.dim {
+      color: #d6f5f7;
+    }
+
+    .footer-note {
+      margin-top: 12px;
+      color: var(--quiet);
+      font-size: 11px;
+      line-height: 1.5;
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    @media (max-width: 1180px) {
+      body {
+        place-items: start center;
+        overflow-x: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="board">
+    <header class="topbar">
+      <h1>山水映迹——唐诗之路的行为与行迹解构</h1>
+      <div class="subtitle">四个 1:1 方形板块横排 / 数据来自“浙东唐诗之路”Markdown 数据库</div>
+    </header>
+
+    <section class="panels" aria-label="唐诗之路四个可视化板块">
+      <article class="panel">
+        <div class="panel-head">
+          <h2>01 意象词云</h2>
+          <div class="mark">真实统计</div>
+        </div>
+        <p class="caption">按意象笔记内容量加权，展示数据库中展开较充分的意象。</p>
+        <div class="chart" id="wordChart"></div>
+      </article>
+
+      <article class="panel">
+        <div class="panel-head">
+          <h2>02 风格流变</h2>
+          <div class="mark">统计 + 归纳</div>
+        </div>
+        <p class="caption">盛唐、中唐、晚唐三阶段的审美重心转向，作为归纳型视觉示意。</p>
+        <div class="chart">
+          <svg id="styleChart" viewBox="0 0 320 260" role="img" aria-label="风格流变图"></svg>
+        </div>
+      </article>
+
+      <article class="panel">
+        <div class="panel-head">
+          <h2>03 常去地点</h2>
+          <div class="mark">真实统计</div>
+        </div>
+        <p class="caption">按地点双链出现频次排序，观察诗路中的核心地理节点。</p>
+        <div class="chart">
+          <svg id="placeChart" viewBox="0 0 320 260" role="img" aria-label="诗人常去地点"></svg>
+        </div>
+      </article>
+
+      <article class="panel">
+        <div class="panel-head">
+          <h2>04 行为方式</h2>
+          <div class="mark">真实统计</div>
+        </div>
+        <p class="caption">统计全库行为字，显示诗路如何由移动、登临、送别和怀想构成。</p>
+        <div class="chart">
+          <svg id="actionChart" viewBox="0 0 320 260" role="img" aria-label="行为方式分析"></svg>
+        </div>
+      </article>
+    </section>
+
+    <div class="footer-note">
+      <span>数据口径：可直接统计项标注为“真实统计”，风格解释为“归纳示意”。</span>
+      <span>截图建议：浏览器缩放 90%-100%，截取整块横向画布。</span>
+    </div>
+  </main>
+
+  <script>
+    const ns = "http://www.w3.org/2000/svg";
+
+    const make = (tag, attrs = {}, text = "") => {
+      const el = document.createElementNS(ns, tag);
+      for (const [key, value] of Object.entries(attrs)) {
+        el.setAttribute(key, value);
+      }
+      if (text) el.textContent = text;
+      return el;
+    };
+
+    const words = [
+      ["烟霞翠微", 299], ["风月", 286], ["仙境", 284], ["松风", 248],
+      ["隐逸", 246], ["清风", 240], ["采莲", 237], ["仙山", 234],
+      ["飞瀑", 233], ["登高", 224], ["溪水", 220], ["云海", 219],
+      ["水如月", 218], ["沧洲归隐", 207], ["雅集", 206], ["金庭玉阙", 189],
+      ["梵音空山", 185], ["古寺", 181]
+    ];
+
+    const wordPos = [
+      [50, 44], [25, 32], [72, 38], [36, 58], [66, 62], [18, 55],
+      [84, 55], [49, 21], [52, 75], [78, 22], [22, 76], [35, 18],
+      [70, 80], [17, 20], [86, 76], [50, 88], [82, 35], [30, 86]
+    ];
+
+    const periods = [
+      { name: "盛唐", count: 37, words: "浪漫 / 山水 / 寻仙" },
+      { name: "中唐", count: 8, words: "清幽 / 怀古 / 送别" },
+      { name: "晚唐", count: 2, words: "精致 / 感怀 / 题咏" }
+    ];
+
+    const places = [
+      ["镜湖", 15], ["若耶溪", 11], ["剡溪", 8], ["天台山", 7],
+      ["会稽山脉", 6], ["四明山", 4], ["钱塘江", 4], ["天姥山", 4]
+    ];
+
+    const actions = [
+      ["怀", 98], ["游", 92], ["登", 71], ["送", 69],
+      ["寻", 69], ["题", 65], ["归", 60], ["望", 53]
+    ];
+
+    function renderWords() {
+      const root = document.getElementById("wordChart");
+      const max = Math.max(...words.map(([, value]) => value));
+      const min = Math.min(...words.map(([, value]) => value));
+
+      words.forEach(([name, value], index) => {
+        const ratio = (value - min) / (max - min);
+        const span = document.createElement("span");
+        span.className = "word" + (index % 3 === 1 ? " alt" : index % 3 === 2 ? " dim" : "");
+        span.textContent = name;
+        span.style.left = wordPos[index][0] + "%";
+        span.style.top = wordPos[index][1] + "%";
+        span.style.fontSize = (13 + ratio * 14).toFixed(1) + "px";
+        span.style.opacity = (0.68 + ratio * 0.32).toFixed(2);
+        root.appendChild(span);
+      });
+    }
+
+    function renderStyle() {
+      const svg = document.getElementById("styleChart");
+      const defs = make("defs");
+      defs.innerHTML = `
+        <linearGradient id="styleRibbon" x1="0" x2="1" y1="0" y2="0">
+          <stop offset="0%" stop-color="#56EAF5" stop-opacity=".82"/>
+          <stop offset="52%" stop-color="#8EDDE5" stop-opacity=".70"/>
+          <stop offset="100%" stop-color="#B8F3F7" stop-opacity=".74"/>
+        </linearGradient>
+        <linearGradient id="styleRibbonSoft" x1="0" x2="1" y1="0" y2="0">
+          <stop offset="0%" stop-color="#56EAF5" stop-opacity=".12"/>
+          <stop offset="55%" stop-color="#8EDDE5" stop-opacity=".11"/>
+          <stop offset="100%" stop-color="#B8F3F7" stop-opacity=".12"/>
+        </linearGradient>
+      `;
+      svg.appendChild(defs);
+
+      const bands = [
+        [24, 42, 78, "#56EAF5", "外放"],
+        [121, 64, 78, "#8EDDE5", "转向"],
+        [218, 86, 78, "#B8F3F7", "凝缩"]
+      ];
+
+      bands.forEach(([x, y, w, color, label]) => {
+        svg.appendChild(make("rect", { x, y, width: w, height: 142, fill: "#071014", stroke: "#142930" }));
+        svg.appendChild(make("line", { x1: x + w / 2, y1: y + 12, x2: x + w / 2, y2: y + 128, stroke: color, "stroke-width": 1, opacity: .36 }));
+        svg.appendChild(make("text", { x: x + w / 2, y: y + 128, "text-anchor": "middle", fill: "#6f8a91", "font-size": 10 }, label));
+      });
+
+      svg.appendChild(make("path", {
+        d: "M28 116 C70 52 106 78 132 112 C166 156 198 154 226 120 C248 94 270 92 296 108 L296 152 C260 136 240 154 218 174 C182 208 146 190 116 146 C88 106 58 118 28 168 Z",
+        fill: "url(#styleRibbonSoft)"
+      }));
+      svg.appendChild(make("path", {
+        d: "M28 126 C70 62 106 88 132 122 C166 166 198 164 226 130 C248 104 270 102 296 118",
+        fill: "none",
+        stroke: "url(#styleRibbon)",
+        "stroke-width": 4,
+        "stroke-linecap": "round"
+      }));
+      svg.appendChild(make("path", {
+        d: "M28 158 C64 132 96 136 126 154 C168 180 202 180 238 154 C260 140 278 138 296 144",
+        fill: "none",
+        stroke: "#d6f5f7",
+        "stroke-width": 1.2,
+        opacity: .42
+      }));
+
+      const nodes = [
+        { x: 60, y: 104, name: "盛唐", words: "浪漫 · 山水 · 寻仙", color: "#56EAF5" },
+        { x: 160, y: 146, name: "中唐", words: "清幽 · 怀古 · 送别", color: "#8EDDE5" },
+        { x: 260, y: 118, name: "晚唐", words: "精致 · 感怀 · 题咏", color: "#B8F3F7" }
+      ];
+
+      nodes.forEach((node) => {
+        svg.appendChild(make("circle", { cx: node.x, cy: node.y, r: 9, fill: "#071014", stroke: node.color, "stroke-width": 2 }));
+        svg.appendChild(make("text", { x: node.x, y: 214, "text-anchor": "middle", fill: node.color, "font-size": 15, "font-weight": 800 }, node.name));
+        svg.appendChild(make("text", { x: node.x, y: 236, "text-anchor": "middle", fill: "#9db7bd", "font-size": 10 }, node.words));
+      });
+
+      svg.appendChild(make("text", { x: 22, y: 22, fill: "#6f8a91", "font-size": 10 }, "审美重心：开阔游仙 → 清幽怀古 → 局部题咏"));
+    }
+
+    function renderPlaces() {
+      const svg = document.getElementById("placeChart");
+      const max = Math.max(...places.map(([, value]) => value));
+      const left = 82;
+
+      places.forEach(([name, value], index) => {
+        const y = 26 + index * 27;
+        const width = 175 * value / max;
+        const color = index < 4 ? "#56EAF5" : "#5f838b";
+        svg.appendChild(make("text", { x: 18, y: y + 13, fill: "#9db7bd", "font-size": 12 }, name));
+        svg.appendChild(make("rect", { x: left, y: y + 3, width: 178, height: 9, fill: "#142930" }));
+        svg.appendChild(make("rect", { x: left, y: y + 3, width, height: 9, fill: color }));
+        svg.appendChild(make("text", { x: 278, y: y + 13, fill: "#edf8fa", "font-size": 12, "text-anchor": "end" }, value));
+      });
+
+      svg.appendChild(make("circle", { cx: 255, cy: 235, r: 18, fill: "none", stroke: "#1f3a43" }));
+      svg.appendChild(make("circle", { cx: 278, cy: 224, r: 8, fill: "none", stroke: "#56EAF5" }));
+      svg.appendChild(make("text", { x: 18, y: 242, fill: "#6f8a91", "font-size": 11 }, "核心：镜湖—若耶溪—剡溪—天台山"));
+    }
+
+    function renderActions() {
+      const svg = document.getElementById("actionChart");
+      const max = Math.max(...actions.map(([, value]) => value));
+      const base = 212;
+      const barWidth = 22;
+      const gap = 14;
+
+      actions.forEach(([name, value], index) => {
+        const h = 150 * value / max;
+        const x = 23 + index * (barWidth + gap);
+        const color = index < 5 ? "#56EAF5" : "#5f838b";
+        svg.appendChild(make("rect", { x, y: base - h, width: barWidth, height: h, fill: color }));
+        svg.appendChild(make("text", { x: x + barWidth / 2, y: base + 22, fill: "#9db7bd", "font-size": 13, "text-anchor": "middle", "font-weight": 800 }, name));
+        svg.appendChild(make("text", { x: x + barWidth / 2, y: base - h - 8, fill: "#edf8fa", "font-size": 10, "text-anchor": "middle" }, value));
+      });
+
+      svg.appendChild(make("line", { x1: 16, y1: base, x2: 306, y2: base, stroke: "#1f3a43", "stroke-width": 1 }));
+      svg.appendChild(make("text", { x: 18, y: 20, fill: "#6f8a91", "font-size": 11 }, "主轴：怀 / 游 / 登 / 送 / 寻"));
+    }
+
+    renderWords();
+    renderStyle();
+    renderPlaces();
+    renderActions();
+  </script>
+</body>
+</html>
+
