@@ -1,0 +1,510 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="深黑科技风唐诗之路数字人文展板主视觉网页。" />
+  <meta name="theme-color" content="#000000" />
+  <title>唐诗之路数字人文展板主视觉</title>
+  <style>
+    :root {
+      --text: #edf8fa;
+      --muted: #aab9bc;
+      --quiet: #71898e;
+      --teal: #56eaf5;
+      --teal-soft: #8edde5;
+      --line: rgba(86, 234, 245, .22);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      background: #000;
+      color: var(--text);
+      font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans SC", Arial, sans-serif;
+      letter-spacing: 0;
+    }
+
+    .stage {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 18px;
+      background:
+        radial-gradient(circle at 50% 12%, rgba(86, 234, 245, .08), transparent 34%),
+        radial-gradient(circle at 78% 78%, rgba(86, 234, 245, .04), transparent 28%),
+        #000;
+    }
+
+    .poster-shell {
+      position: relative;
+      width: min(100%, 1792px);
+      aspect-ratio: 1792 / 1024;
+      overflow: hidden;
+      border: 1px solid rgba(86, 234, 245, .18);
+      background: #000;
+      container-type: inline-size;
+      box-shadow:
+        0 0 0 1px rgba(255, 255, 255, .03) inset,
+        0 28px 90px rgba(0, 0, 0, .75);
+    }
+
+    .poster {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: saturate(1.04) contrast(1.08);
+    }
+
+    .poster-shell::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, rgba(0, 0, 0, .36), transparent 34%, transparent 72%, rgba(0, 0, 0, .24)),
+        linear-gradient(180deg, rgba(0, 0, 0, .10), transparent 55%, rgba(0, 0, 0, .18));
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .layer {
+      position: absolute;
+      z-index: 3;
+    }
+
+    .title-block {
+      left: 3.05%;
+      top: 5.05%;
+      width: 21.8%;
+    }
+
+    h1 {
+      margin: 0;
+      font-family: "STKaiti", "KaiTi", "FangSong", "SimSun", serif;
+      font-size: 4.18cqw;
+      line-height: .98;
+      font-weight: 500;
+      letter-spacing: .045em;
+      color: rgba(237, 248, 250, .86);
+      text-shadow: 0 0 .95cqw rgba(255, 255, 255, .10);
+    }
+
+    .seal {
+      position: absolute;
+      left: 76.5%;
+      top: 3%;
+      border: 1px solid rgba(231, 140, 152, .72);
+      padding: .24em .16em;
+      color: #e78c98;
+      font-size: .78cqw;
+      line-height: 1;
+      writing-mode: vertical-rl;
+    }
+
+    .subtitle {
+      margin: 4.2% 0 0;
+      color: rgba(237, 248, 250, .66);
+      font-family: "SimSun", "Songti SC", "Noto Serif SC", serif;
+      font-size: 1.27cqw;
+      line-height: 1.32;
+      letter-spacing: .18em;
+    }
+
+    .en-title {
+      margin: 5.8% 0 0;
+      color: rgba(237, 248, 250, .62);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: .82cqw;
+      line-height: 1.42;
+      letter-spacing: .075em;
+      text-transform: uppercase;
+    }
+
+    .intro {
+      left: 3.08%;
+      top: 26.35%;
+      width: 20.6%;
+      color: rgba(237, 248, 250, .75);
+      font-family: "SimSun", "Songti SC", "Noto Serif SC", serif;
+      font-size: .88cqw;
+      line-height: 1.95;
+    }
+
+    .intro p {
+      margin: 0;
+    }
+
+    .stats {
+      left: 25.7%;
+      top: 20.35%;
+      display: grid;
+      grid-template-columns: repeat(4, auto);
+      gap: 2.35cqw;
+      align-items: end;
+    }
+
+    .stat {
+      min-width: 5.45cqw;
+      padding-right: 1.55cqw;
+      border-right: 1px solid rgba(86, 234, 245, .2);
+    }
+
+    .stat:last-child {
+      border-right: 0;
+    }
+
+    .stat .label {
+      color: rgba(113, 137, 142, .82);
+      font-size: .6cqw;
+      line-height: 1.2;
+      letter-spacing: .08em;
+    }
+
+    .stat strong {
+      display: block;
+      margin-top: .32em;
+      color: rgba(237, 248, 250, .84);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 2.02cqw;
+      line-height: 1;
+      font-weight: 400;
+    }
+
+    .stat > span {
+      color: rgba(113, 137, 142, .78);
+      font-size: .54cqw;
+      line-height: 1.2;
+      text-transform: uppercase;
+    }
+
+    .stat strong .affix {
+      color: rgba(237, 248, 250, .72);
+      font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans SC", Arial, sans-serif;
+      font-size: .48em;
+      letter-spacing: .02em;
+      vertical-align: .16em;
+    }
+
+    .legend {
+      left: 3.1%;
+      top: 48.05%;
+      display: grid;
+      gap: .75cqw;
+      color: var(--quiet);
+      font-size: .63cqw;
+      line-height: 1.1;
+    }
+
+    .legend-item {
+      display: grid;
+      grid-template-columns: 1.55cqw auto auto;
+      gap: .56cqw;
+      align-items: center;
+    }
+
+    .legend i {
+      display: block;
+      height: 1px;
+      background: var(--teal);
+      opacity: .72;
+    }
+
+    .legend .dot {
+      width: .56cqw;
+      height: .56cqw;
+      margin-left: .5cqw;
+      border: 1px solid var(--teal);
+      border-radius: 50%;
+      background: rgba(86, 234, 245, .15);
+    }
+
+    .legend b {
+      color: rgba(237, 248, 250, .74);
+      font-weight: 400;
+    }
+
+    .map-label {
+      position: absolute;
+      color: rgba(237, 248, 250, .9);
+      font-family: "SimSun", "Songti SC", "Noto Serif SC", serif;
+      font-size: 1.06cqw;
+      line-height: 1.1;
+      font-weight: 700;
+      letter-spacing: .035em;
+      text-shadow: 0 0 .7cqw rgba(0, 0, 0, .94);
+    }
+
+    .map-label small {
+      display: block;
+      margin-top: .22em;
+      color: rgba(237, 248, 250, .64);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: .55em;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .tiantai { left: 25.65%; top: 38.45%; }
+    .shanxi { left: 40.05%; top: 31.35%; }
+    .ruoye { left: 58.1%; top: 24.8%; }
+    .kuaji { left: 67.45%; top: 12.9%; }
+    .jinghu { left: 87.25%; top: 11.65%; }
+
+    .section-label {
+      position: absolute;
+      bottom: 29.15%;
+      width: 13.2%;
+      text-align: center;
+      color: rgba(237, 248, 250, .82);
+      font-family: "SimSun", "Songti SC", "Noto Serif SC", serif;
+      font-size: .78cqw;
+      line-height: 1.32;
+      text-shadow: 0 .08cqw .45cqw rgba(0, 0, 0, .96);
+    }
+
+    .section-label strong {
+      display: block;
+      color: rgba(237, 248, 250, .92);
+      font-size: 1.3em;
+      font-weight: 500;
+      letter-spacing: .08em;
+    }
+
+    .section-label span {
+      display: block;
+      color: rgba(170, 185, 188, .84);
+      font-size: .68em;
+      letter-spacing: .04em;
+    }
+
+    .section-label em {
+      display: block;
+      margin-top: .45em;
+      color: rgba(237, 248, 250, .72);
+      font-style: normal;
+      font-size: .66em;
+      line-height: 1.48;
+    }
+
+    .sec-tiantai { left: 27.2%; }
+    .sec-shanxi { left: 43.35%; }
+    .sec-ruoye { left: 59.35%; }
+    .sec-jinghu { left: 79.25%; }
+
+    .axis {
+      left: 7.7%;
+      bottom: 10.2%;
+      width: 78.4%;
+      height: 16.9%;
+      pointer-events: none;
+    }
+
+    .axis svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .poem-title {
+      left: 3.08%;
+      bottom: 20.95%;
+      color: rgba(237, 248, 250, .76);
+      font-family: "SimSun", "Songti SC", "Noto Serif SC", serif;
+      font-size: .72cqw;
+      line-height: 1.5;
+    }
+
+    .distribution {
+      right: 3.3%;
+      bottom: 8.65%;
+      width: 11.35%;
+      color: rgba(237, 248, 250, .74);
+      font-size: .62cqw;
+      line-height: 1.55;
+    }
+
+    .distribution h2 {
+      margin: 0 0 .5em;
+      color: rgba(237, 248, 250, .78);
+      font-family: "SimSun", "Songti SC", "Noto Serif SC", serif;
+      font-size: 1.08em;
+      font-weight: 400;
+    }
+
+    .dist-row {
+      display: grid;
+      grid-template-columns: 4.5em 1fr 2em;
+      gap: .55em;
+      align-items: center;
+    }
+
+    .dist-row i {
+      height: .52em;
+      background: linear-gradient(90deg, rgba(86, 234, 245, .78), rgba(237, 248, 250, .34));
+    }
+
+    .project {
+      left: 3.05%;
+      bottom: 3.35%;
+      color: rgba(237, 248, 250, .62);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: .74cqw;
+      line-height: 1.5;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .source {
+      left: 35%;
+      bottom: 3.42%;
+      color: rgba(237, 248, 250, .38);
+      font-size: .66cqw;
+      line-height: 1.4;
+    }
+
+    .place {
+      right: 3.25%;
+      bottom: 3.42%;
+      color: rgba(237, 248, 250, .68);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: .74cqw;
+      line-height: 1.4;
+      letter-spacing: .1em;
+      text-align: right;
+    }
+
+    .place span {
+      margin-left: 1.2em;
+      color: var(--teal);
+      font-family: inherit;
+    }
+
+    .scanline,
+    .edge-light {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    .scanline {
+      opacity: .13;
+      background-image: linear-gradient(rgba(255, 255, 255, .045) 1px, transparent 1px);
+      background-size: 100% 4px;
+      mix-blend-mode: screen;
+    }
+
+    .edge-light {
+      box-shadow:
+        inset 0 0 72px rgba(86, 234, 245, .055),
+        inset 0 0 180px rgba(0, 0, 0, .72);
+    }
+
+    @media (max-width: 900px) {
+      .stage {
+        padding: 8px;
+        align-content: start;
+      }
+
+      .poster-shell {
+        width: 100%;
+        margin-top: 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="stage" aria-label="唐诗之路数字人文展板主视觉">
+    <section class="poster-shell">
+      <img class="poster" src="assets/tang-poetry-road-hero-ai-clean.png" alt="" />
+
+      <header class="layer title-block">
+        <h1>唐诗之路</h1>
+        <div class="seal">浙东</div>
+        <p class="subtitle">浙东的山水与诗心</p>
+        <p class="en-title">Tang Poetry Road<br />Landscape and Poetic Mind in Eastern Zhejiang</p>
+      </header>
+
+      <div class="layer intro">
+        <p>唐诗之路，取道浙东山水之间，<br />从镜湖出发，溯若耶溪与山阴溪，<br />越台山之巅，抵天台之境。<br />诗与地理互为映照，行旅与心灵共振。<br />这是一条由诗人足迹、自然地理<br />与历史文脉共同织就的文化路径。</p>
+      </div>
+
+      <section class="layer stats" aria-label="展板基础统计">
+        <div class="stat"><div class="label">行政区域</div><strong>4</strong><span>Regions</span></div>
+        <div class="stat"><div class="label">核心地点</div><strong>12</strong><span>Sites</span></div>
+        <div class="stat"><div class="label">关联诗作</div><strong>128</strong><span>Poems</span></div>
+        <div class="stat"><div class="label">行旅长度</div><strong><span class="affix">约</span>180<span class="affix">km</span></strong><span>Distance</span></div>
+      </section>
+
+      <section class="layer legend" aria-label="图例">
+        <div class="legend-item"><i></i><b>诗人行迹</b><span>Poetic Journey</span></div>
+        <div class="legend-item"><i class="dot"></i><b>主要地点</b><span>Key Locations</span></div>
+        <div class="legend-item"><i></i><b>水系河流</b><span>River System</span></div>
+        <div class="legend-item"><i></i><b>山脉地形</b><span>Mountain System</span></div>
+        <div class="legend-item"><i></i><b>诗歌数量</b><span>Poetry Count</span></div>
+        <div class="legend-item"><i></i><b>海拔高度</b><span>Elevation</span></div>
+      </section>
+
+      <div class="layer map-label tiantai">天台山<small>Tiantai Mountain</small></div>
+      <div class="layer map-label shanxi">山阴溪<small>Shanxi Creek</small></div>
+      <div class="layer map-label ruoye">若耶溪<small>Ruoye Creek</small></div>
+      <div class="layer map-label kuaji">会稽<small>Kuaji</small></div>
+      <div class="layer map-label jinghu">镜湖<small>Jinghu</small></div>
+
+      <div class="layer section-label sec-tiantai">
+        <strong>天台山</strong><span>佛国仙山</span><em>诗作 36 首<br />海拔 1098 m</em>
+      </div>
+      <div class="layer section-label sec-shanxi">
+        <strong>山阴溪</strong><span>南流曲折</span><em>诗作 28 首<br />海拔 180 m</em>
+      </div>
+      <div class="layer section-label sec-ruoye">
+        <strong>若耶溪</strong><span>绿竹名岸</span><em>诗作 42 首<br />海拔 35 m</em>
+      </div>
+      <div class="layer section-label sec-jinghu">
+        <strong>镜湖</strong><span>越中明镜</span><em>诗作 22 首<br />海拔 5 m</em>
+      </div>
+
+      <div class="layer poem-title">诗作分布<br />（首）</div>
+      <div class="layer axis" aria-label="诗作分布频谱图">
+        <svg viewBox="0 0 1440 170" preserveAspectRatio="none">
+          <line x1="0" y1="126" x2="1440" y2="126" stroke="rgba(86,234,245,.38)" />
+          <line x1="0" y1="84" x2="1440" y2="84" stroke="rgba(255,255,255,.08)" />
+          <line x1="0" y1="42" x2="1440" y2="42" stroke="rgba(255,255,255,.08)" />
+          <g fill="rgba(86,234,245,.58)">
+            <rect x="36" y="114" width="4" height="12"/><rect x="52" y="104" width="4" height="22"/><rect x="68" y="96" width="4" height="30"/><rect x="88" y="78" width="4" height="48"/><rect x="110" y="102" width="4" height="24"/><rect x="124" y="56" width="5" height="70"/><rect x="146" y="92" width="4" height="34"/><rect x="170" y="112" width="4" height="14"/><rect x="202" y="96" width="4" height="30"/><rect x="224" y="72" width="4" height="54"/><rect x="260" y="108" width="4" height="18"/><rect x="292" y="100" width="4" height="26"/><rect x="330" y="90" width="4" height="36"/><rect x="370" y="110" width="4" height="16"/><rect x="410" y="84" width="4" height="42"/><rect x="450" y="98" width="4" height="28"/><rect x="488" y="74" width="4" height="52"/><rect x="526" y="102" width="4" height="24"/><rect x="566" y="116" width="4" height="10"/><rect x="604" y="92" width="4" height="34"/><rect x="646" y="82" width="4" height="44"/><rect x="684" y="60" width="5" height="66"/><rect x="728" y="104" width="4" height="22"/><rect x="766" y="90" width="4" height="36"/><rect x="804" y="108" width="4" height="18"/><rect x="842" y="96" width="4" height="30"/><rect x="878" y="80" width="4" height="46"/><rect x="916" y="70" width="4" height="56"/><rect x="956" y="42" width="5" height="84"/><rect x="974" y="86" width="4" height="40"/><rect x="1012" y="74" width="4" height="52"/><rect x="1050" y="112" width="4" height="14"/><rect x="1088" y="96" width="4" height="30"/><rect x="1128" y="104" width="4" height="22"/><rect x="1168" y="90" width="4" height="36"/><rect x="1208" y="78" width="4" height="48"/><rect x="1224" y="62" width="5" height="64"/><rect x="1240" y="72" width="4" height="54"/><rect x="1282" y="94" width="4" height="32"/><rect x="1324" y="108" width="4" height="18"/><rect x="1362" y="84" width="4" height="42"/>
+          </g>
+          <g fill="rgba(237,248,250,.62)" font-size="14" font-family="Georgia, serif">
+            <text x="170" y="160">天台山段　TIANTAI MOUNTAIN</text>
+            <text x="610" y="160">山阴溪段　SHANXI CREEK</text>
+            <text x="930" y="160">若耶溪段　RUOYE CREEK</text>
+            <text x="1220" y="160">镜湖段　JINGHU</text>
+          </g>
+        </svg>
+      </div>
+
+      <aside class="layer distribution">
+        <h2>诗歌体裁分布</h2>
+        <div class="dist-row"><span>五言绝句</span><i style="width:100%"></i><b>48</b></div>
+        <div class="dist-row"><span>七言绝句</span><i style="width:72%"></i><b>32</b></div>
+        <div class="dist-row"><span>五言律诗</span><i style="width:58%"></i><b>26</b></div>
+        <div class="dist-row"><span>七言律诗</span><i style="width:42%"></i><b>18</b></div>
+        <div class="dist-row"><span>其他</span><i style="width:18%"></i><b>4</b></div>
+      </aside>
+
+      <div class="layer project">浙东唐诗地理可视化研究<br />Digital Humanities Project</div>
+      <div class="layer source">数据来源：唐诗全文数据库 / 地理空间数据云 / 浙江省文旅资源库</div>
+      <div class="layer place">Zhejiang, China <span>中国 · 浙江</span></div>
+
+      <div class="scanline" aria-hidden="true"></div>
+      <div class="edge-light" aria-hidden="true"></div>
+    </section>
+  </main>
+</body>
+</html>
